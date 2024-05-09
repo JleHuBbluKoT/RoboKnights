@@ -1,0 +1,42 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1714877596",
+        "python_version": "3.9.13 (tags/v3.9.13:6de2ca5, May 17 2022, 16:36:42) [MSC v.1929 64 bit (AMD64)]",
+        "command_line_arguments": "D:\\Programms\\Unity Test\\Blimps\\RoboKnights\\venv\\Scripts\\mlagents-learn --run-id=test3",
+        "mlagents_version": "0.30.0",
+        "mlagents_envs_version": "0.30.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "2.3.0+cpu",
+        "numpy_version": "1.21.2",
+        "end_time_seconds": "1714877660"
+    },
+    "total": 63.3550966,
+    "count": 1,
+    "self": 0.003497099999997033,
+    "children": {
+        "run_training.setup": {
+            "total": 0.035633999999999943,
+            "count": 1,
+            "self": 0.035633999999999943
+        },
+        "TrainerController.start_learning": {
+            "total": 63.315965500000004,
+            "count": 1,
+            "self": 0.0002742000000068856,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 63.315674,
+                    "count": 1,
+                    "self": 63.315674
+                },
+                "TrainerController._save_models": {
+                    "total": 1.7299999996112092e-05,
+                    "count": 1,
+                    "self": 1.7299999996112092e-05
+                }
+            }
+        }
+    }
+}
