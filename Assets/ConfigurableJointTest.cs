@@ -23,7 +23,13 @@ public class ConfigurableJointTest : MonoBehaviour
         //i = (i + 1) % 720;
         //cj.SetTargetRotationLocal(Quaternion.Euler(0, i, 0), cj.transform.localRotation);
 
-        cj.targetRotation = observer.rotation; //(Quaternion.Euler(qx, qy, qz));
+        //cj.targetRotation = observer.rotation; 
+
+        
+        Vector3 eulers = observer.rotation.eulerAngles;
+        cj.targetRotation = (Quaternion.Euler(eulers));
+
+        //cj.targetRotation = (Quaternion.Euler(qx, qy, qz));
 
     }
 }

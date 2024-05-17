@@ -13,17 +13,21 @@ public class DriveAttempt : MonoBehaviour
     public Vector3 Vrotation;
     public bool freeX;
     public Vector2 swingX;
+    public bool freeY;
+    public Vector2 twistY;
     public bool freeZ;
     public Vector2 swingZ;
-    public bool freeY;
-    public Vector2 twistY;  
 
     public bool debugLines;
 
     public Vector3 debugDrive;
 
+    public float weight;
+    public Rigidbody mainRB;
+
     void Start() {
         anchorToParent = this.transform.localPosition + anchor;
+
 
     }
     // Эта штука плохо работает с объектами, части вращающейся руки проваливаются сквозь пол
@@ -32,6 +36,8 @@ public class DriveAttempt : MonoBehaviour
         //Vrotation.x =  (Vrotation.x + 0.2f) % 360;
         Debug.DrawLine(parent.position, worldAnchor(), Color.green, 0.1f);
         moveDrive(debugDrive);
+
+        //mainRB.AddForceAtPosition(weight * Vector3.down, this.transform.position);
     }
 
 
