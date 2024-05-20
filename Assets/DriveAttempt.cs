@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class DriveAttempt : MonoBehaviour
 {
+    public enum axis
+    {
+        x, y, z
+    }
     public Transform parent;
     public Vector3 anchor;
 
@@ -34,7 +38,7 @@ public class DriveAttempt : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate() {
         //Vrotation.x =  (Vrotation.x + 0.2f) % 360;
-        Debug.DrawLine(parent.position, worldAnchor(), Color.green, 0.1f);
+        //Debug.DrawLine(parent.position, worldAnchor(), Color.green, 0.1f);
         moveDrive(debugDrive);
 
         //mainRB.AddForceAtPosition(weight * Vector3.down, this.transform.position);
@@ -47,9 +51,14 @@ public class DriveAttempt : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(Vrotation);
         this.transform.localRotation = rotation;
         this.transform.localPosition = anchorToParent + rotation * -anchor;  
-        
     }
-
+    public void SetRotation(Vector3 vector)
+    {
+        Vrotation = rotationClamp(vector);
+        Quaternion rotation = Quaternion.Euler(Vrotation);
+        this.transform.localRotation = rotation;
+        this.transform.localPosition = anchorToParent + rotation * -anchor;
+    }
     /*
     public void moveDrive(Vector3 change) {
         //Quaternion prevRot = Quaternion.Euler(Vrotation);
@@ -63,6 +72,11 @@ public class DriveAttempt : MonoBehaviour
         Vrotation += change;
         SetRotation();
     }
+    public void moveDrive(float x, float y, float z)
+    {
+        Vrotation += new Vector3(x,y,z);
+        SetRotation();
+    }
 
     public Vector3 rotationClamp(Vector3 rot) {
         float x = freeX ? rot.x : Mathf.Clamp(rot.x, swingX.x, swingX.y);
@@ -74,6 +88,30 @@ public class DriveAttempt : MonoBehaviour
 
     public Vector3 worldAnchor() {
         return parent.position + parent.rotation * anchorToParent;
+    }
+
+    public List<float> CurrentRotation() {
+        List< float> ret = new List< float>();
+        if (swingX.x != swingX.y | freeX)
+        {
+            ret.Add( part(freeX, swingX, Vrotation.x));
+        }
+        if (twistY.x != twistY.y | freeY)
+        {
+            ret.Add(part(freeY, twistY, Vrotation.y));
+        }
+        if (swingZ.x != swingZ.y | freeZ)
+        {
+            ret.Add( part(freeZ, swingZ, Vrotation.z));
+        }
+        return ret; 
+    }
+    private float part(bool freeQ, Vector2 limits, float current) {
+        if (freeQ) {
+            return (current) / 360;
+        }
+        float half = (limits.y - limits.x) / 2;
+        return (current - half) / half + 1;
     }
 
 }

@@ -1,0 +1,29 @@
+{
+    "RoboHand": {
+        "checkpoints": [
+            {
+                "steps": 449528,
+                "file_path": "results\\test4\\RoboHand\\RoboHand-449528.onnx",
+                "reward": 432.45917858396814,
+                "creation_time": 1716139176.4707713,
+                "auxillary_file_paths": [
+                    "results\\test4\\RoboHand\\RoboHand-449528.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 449528,
+            "file_path": "results\\test4\\RoboHand.onnx",
+            "reward": 432.45917858396814,
+            "creation_time": 1716139176.4707713,
+            "auxillary_file_paths": [
+                "results\\test4\\RoboHand\\RoboHand-449528.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.3.0+cu118"
+    }
+}

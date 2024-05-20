@@ -38,15 +38,12 @@ public class AgentController : Agent
         ContiniousAction[1] = Input.GetAxisRaw("Vertical");
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "Pellet")
-        {
+    private void OnTriggerEnter(Collider other) {
+        if (other.gameObject.tag == "Pellet") { 
             AddReward(10f);
             EndEpisode();
         }
-        if (other.gameObject.tag == "Wall")
-        {
+        if (other.gameObject.tag == "Wall") {
             AddReward(-5f);
             EndEpisode();
         }
