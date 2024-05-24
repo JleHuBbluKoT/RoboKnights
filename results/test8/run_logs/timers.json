@@ -1,0 +1,42 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1716550587",
+        "python_version": "3.9.13 (tags/v3.9.13:6de2ca5, May 17 2022, 16:36:42) [MSC v.1929 64 bit (AMD64)]",
+        "command_line_arguments": "D:\\Programms\\Unity Test\\Blimps\\RoboKnights\\venv\\Scripts\\mlagents-learn config/RoboHand.yaml --run-id=test8 --initialize-from=test7 --force",
+        "mlagents_version": "0.30.0",
+        "mlagents_envs_version": "0.30.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "2.3.0+cu118",
+        "numpy_version": "1.21.2",
+        "end_time_seconds": "1716550650"
+    },
+    "total": 63.5446287,
+    "count": 1,
+    "self": 0.02079899999999668,
+    "children": {
+        "run_training.setup": {
+            "total": 0.26497810000000044,
+            "count": 1,
+            "self": 0.26497810000000044
+        },
+        "TrainerController.start_learning": {
+            "total": 63.2588516,
+            "count": 1,
+            "self": 0.00016679999999524853,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 63.2586657,
+                    "count": 1,
+                    "self": 63.2586657
+                },
+                "TrainerController._save_models": {
+                    "total": 1.9100000002936213e-05,
+                    "count": 1,
+                    "self": 1.9100000002936213e-05
+                }
+            }
+        }
+    }
+}

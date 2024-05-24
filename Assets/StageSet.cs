@@ -11,7 +11,7 @@ public class StageSet : MonoBehaviour
     public void ResetStage(RoboHand hand, int level)
     {
         float fi = Random.Range(-Mathf.PI, Mathf.PI);
-        float lamdaorsomething = Random.Range(2.5f, 3.5f);
+        float lamdaorsomething = Random.Range(3f, 3.8f);
         startPedestal.transform.localPosition = new Vector3(Mathf.Cos(fi), 0, Mathf.Sin(fi)) * lamdaorsomething + floor.transform.localPosition + Vector3.up;
         finishPedestal.transform.localPosition = new Vector3(Mathf.Cos(fi + lamdaorsomething), 0, Mathf.Sin(fi + lamdaorsomething)) * lamdaorsomething + floor.transform.localPosition + Vector3.up;
         objective.transform.position = startPedestal.targetPoint.position;
