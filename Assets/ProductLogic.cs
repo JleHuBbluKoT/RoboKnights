@@ -14,10 +14,8 @@ public class ProductLogic : MonoBehaviour
             hand.Punish(-0.01f);
             hand.IAmAFailure();
         }
-        if (collision.gameObject.tag == "hand")
-        {
-            hand.Punish(0.05f);
-        }
+        //if (collision.gameObject.tag == "hand") hand.Punish(0.001f);
+
         
 
     }
@@ -27,6 +25,10 @@ public class ProductLogic : MonoBehaviour
         {
             hand.Punish(0.15f);
             stay += 1;
+        }
+        else if (other.tag == "Finishing")
+        {
+            hand.Punish(0.02f);
         }
     }
 }

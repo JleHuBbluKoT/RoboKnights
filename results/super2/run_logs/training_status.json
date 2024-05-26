@@ -1,0 +1,38 @@
+{
+    "RoboHand": {
+        "checkpoints": [
+            {
+                "steps": 499966,
+                "file_path": "results\\super2\\RoboHand\\RoboHand-499966.onnx",
+                "reward": 0.5396800383373543,
+                "creation_time": 1716648158.5597525,
+                "auxillary_file_paths": [
+                    "results\\super2\\RoboHand\\RoboHand-499966.pt"
+                ]
+            },
+            {
+                "steps": 839205,
+                "file_path": "results\\super2\\RoboHand\\RoboHand-839205.onnx",
+                "reward": 7.575540072018547,
+                "creation_time": 1716649038.1511743,
+                "auxillary_file_paths": [
+                    "results\\super2\\RoboHand\\RoboHand-839205.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 839205,
+            "file_path": "results\\super2\\RoboHand.onnx",
+            "reward": 7.575540072018547,
+            "creation_time": 1716649038.1511743,
+            "auxillary_file_paths": [
+                "results\\super2\\RoboHand\\RoboHand-839205.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.3.0+cu118"
+    }
+}
