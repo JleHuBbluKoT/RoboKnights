@@ -20,11 +20,16 @@ public class RoboHand : Agent
     public StageSet stageSet;
 
     public int level; // стадии обучения
-    public float strength;
+    public float strength;  // Важно видеть
     public GameObject handItself;
-    public bool doDebug;
+    public bool doDebug; // Важно видеть
 
-public override void OnEpisodeBegin()
+    public Vector2 L1clawLimits;
+    public Vector2 ballPowerDist;
+    public float ballTouchReward;
+    public Vector2 pedestalPowerDist;
+
+    public override void OnEpisodeBegin()
     {
         stageSet.ResetStage(this, 0);
         shoulder.SetRotation(Vector3.zero);
@@ -33,7 +38,7 @@ public override void OnEpisodeBegin()
         palmController.resetFingers();
         goToDefault = 0;
         handItself.transform.rotation = Quaternion.Euler(0, 0, 0);
-        handItself.transform.localPosition = new Vector3(0f, 0f, 0f);
+        handItself.transform.localPosition = new Vector3(0f, -1.65f, 0f);
         level = 1;
         product.stay = 0;
         product.pedestal = 0;
@@ -114,25 +119,33 @@ public override void OnEpisodeBegin()
                 break;
         }
         
+        if (Vector3.Distance(EnvPos(this.transform), Vector3.zero) > 10f)
+        {
+            IAmAFailure();
+        }
+        if (Vector3.Distance(EnvPos(product.transform), Vector3.zero) > 15f)
+        {
+            IAmAFailure();
+        }
     }
 
     private void LevelOneCheck() { // рука должна приблизиться к шару, не опрокинув его
-        float ballDist = 0.002f * Mathf.Pow(DistanceSnifferBall() -2.2f, 3) * -1;
+        float ballDist = ballPowerDist.x * Mathf.Pow(DistanceSnifferBall() - ballPowerDist.y, 3) * -1;
         AddReward(ballDist);
         //Debug.Log(ClawOpenTooFarFromBall());
-        float clawFar = product.inhand * ClawOpenTooFarFromBall() *  0.005f + (product.inhand - 1) * ClawOpenTooFarFromBall() * 0.001f;
+        float clawFar = product.inhand * ClawOpenTooFarFromBall() * L1clawLimits.x + (product.inhand - 1) * ClawOpenTooFarFromBall() * L1clawLimits.y;
         AddReward(clawFar);
-        float baseB = BrokenBase() * -0.1f;
-        AddReward(baseB);
-        float touchProduct = product.inhand * 0.06f;
+        //float baseB = BrokenBase() * -0.1f;
+        //AddReward(baseB);
+        float touchProduct = product.inhand * ballTouchReward;
         AddReward(touchProduct);
         //float rew = Mathf.Pow(palmController.fingersTouching(), 3) * 0.1f;
         //AddReward(rew);
         if (doDebug)
         {
-            Debug.Log("distance: " + ballDist + " | clawFar: " + clawFar + " | brokenBase: " + baseB + " | touching: " + touchProduct + " | total: " + (ballDist + clawFar + baseB + touchProduct) + " | ballH"  + EnvPos(product.transform).y);
+            Debug.Log("distance: " + ballDist + " | clawFar: " + clawFar +  " | touching: " + touchProduct + " | total: " + (ballDist + clawFar  + touchProduct) + " | ballH"  + EnvPos(product.transform).y);
         }
-        if (EnvPos(product.transform).y > 2.8f)
+        if (EnvPos(product.transform).y > 2.7f)
         {
             this.level = 2;
             AddReward(20f);
@@ -147,16 +160,16 @@ public override void OnEpisodeBegin()
 
     private void LevelTwoCheck()
     { // рука должна поднять шар как можно выше
-        float ballDist = 0.002f * Mathf.Pow(DistanceSnifferBall() - 2.8f, 3) * (-1);
+        float ballDist = ballPowerDist.x * Mathf.Pow(DistanceSnifferBall() - ballPowerDist.y, 3) * (-1);
         AddReward(ballDist);
-        float ballAlt = (EnvPos(product.transform).y + 1) *0.001f;
+        float ballAlt = (EnvPos(product.transform).y + 1) *0.002f;
         AddReward(ballAlt);
 
         // должна приблизиться
-        float ballpedestal = 0.0007f * Mathf.Pow(DistanceBallPedestal() - 7.0f, 3) * (-1);
-
+        float ballpedestal = pedestalPowerDist.x * Mathf.Pow(DistanceBallPedestal() - pedestalPowerDist.y, 3) * (-1);
         AddReward(ballpedestal);
-        float touchProduct = product.inhand * 0.02f;
+
+        float touchProduct = product.inhand * ballTouchReward;
         AddReward(touchProduct);
 
         if (doDebug)
@@ -231,8 +244,8 @@ public override void OnEpisodeBegin()
         AddReward(-1f);
         EndEpisode();
     }
-    public Vector3 shoulderDefault = Vector3.zero;
-    public Vector3 armDefault = Vector3.zero;
-    public Vector3 palmDefault = Vector3.zero;
-    public Vector3 fingerDefault = Vector3.zero;
+    private Vector3 shoulderDefault = Vector3.zero;
+    private Vector3 armDefault = Vector3.zero;
+    private Vector3 palmDefault = Vector3.zero;
+    private Vector3 fingerDefault = Vector3.zero;
 }

@@ -21,24 +21,29 @@ public class ProductLogic : MonoBehaviour
         
 
     }
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        
-        
+        if (other.tag == "Finishing" & stay == 0)
+        {
+            inhand = 1;
+        }
         if (other == hand.pedestal.sc)
         {
             pedestal = 1;
             stay += 1;
-        } else
-        {
-            pedestal = 0;
         }
+    }
+    private void OnTriggerExit(Collider other)
+    {
         if (other.tag == "Finishing" & stay == 0)
-        {
-            inhand = 1;
-        } else
         {
             inhand = 0;
         }
+        if (other == hand.pedestal.sc)
+        {
+            pedestal = 0;
+
+        }
     }
+
 }
