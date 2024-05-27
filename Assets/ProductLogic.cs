@@ -6,6 +6,8 @@ public class ProductLogic : MonoBehaviour
 {
     public RoboHand hand;
     public int stay = 0;
+    public int pedestal = 0;
+    public int inhand = 0;
 
     private void OnCollisionStay(Collision collision)
     {
@@ -21,14 +23,22 @@ public class ProductLogic : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
+        
+        
         if (other == hand.pedestal.sc)
         {
-            hand.Punish(0.15f);
+            pedestal = 1;
             stay += 1;
-        }
-        else if (other.tag == "Finishing")
+        } else
         {
-            hand.Punish(0.02f);
+            pedestal = 0;
+        }
+        if (other.tag == "Finishing" & stay == 0)
+        {
+            inhand = 1;
+        } else
+        {
+            inhand = 0;
         }
     }
 }

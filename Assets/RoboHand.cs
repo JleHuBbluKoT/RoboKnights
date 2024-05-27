@@ -36,6 +36,8 @@ public override void OnEpisodeBegin()
         handItself.transform.localPosition = new Vector3(0f, 0f, 0f);
         level = 1;
         product.stay = 0;
+        product.pedestal = 0;
+        product.inhand = 0;
     }
     public override void OnActionReceived(ActionBuffers actions)
     {
@@ -115,20 +117,22 @@ public override void OnEpisodeBegin()
     }
 
     private void LevelOneCheck() { // рука должна приблизиться к шару, не опрокинув его
-        float ballDist = 0.001f * Mathf.Pow(DistanceSnifferBall() - 2.3f, 3) * -1;
+        float ballDist = 0.002f * Mathf.Pow(DistanceSnifferBall() -2.2f, 3) * -1;
         AddReward(ballDist);
         //Debug.Log(ClawOpenTooFarFromBall());
-        float clawFar = Mathf.Clamp( 0.002f * ClawOpenTooFarFromBall(), -0.00001f, 1f);
+        float clawFar = product.inhand * ClawOpenTooFarFromBall() *  0.005f + (product.inhand - 1) * ClawOpenTooFarFromBall() * 0.001f;
         AddReward(clawFar);
-        float baseB = BrokenBase() * -0.2f;
+        float baseB = BrokenBase() * -0.1f;
         AddReward(baseB);
+        float touchProduct = product.inhand * 0.06f;
+        AddReward(touchProduct);
         //float rew = Mathf.Pow(palmController.fingersTouching(), 3) * 0.1f;
         //AddReward(rew);
         if (doDebug)
         {
-            Debug.Log("distance: " + ballDist + " | clawFar: " + clawFar + " | brokenBase: " + baseB + " | total: " + (ballDist + clawFar) + " | ballH"  + EnvPos(product.transform).y);
+            Debug.Log("distance: " + ballDist + " | clawFar: " + clawFar + " | brokenBase: " + baseB + " | touching: " + touchProduct + " | total: " + (ballDist + clawFar + baseB + touchProduct) + " | ballH"  + EnvPos(product.transform).y);
         }
-        if (EnvPos(product.transform).y > 3.0f)
+        if (EnvPos(product.transform).y > 2.8f)
         {
             this.level = 2;
             AddReward(20f);
@@ -143,34 +147,42 @@ public override void OnEpisodeBegin()
 
     private void LevelTwoCheck()
     { // рука должна поднять шар как можно выше
-        float ballDist = 0.001f * Mathf.Pow(DistanceSnifferBall() - 2.0f, 3) * (-1);
+        float ballDist = 0.002f * Mathf.Pow(DistanceSnifferBall() - 2.8f, 3) * (-1);
         AddReward(ballDist);
         float ballAlt = (EnvPos(product.transform).y + 1) *0.001f;
         AddReward(ballAlt);
 
         // должна приблизиться
-        float ballpedestal = 0.001f * Mathf.Pow(DistanceBallPedestal() - 8.0f, 3) * (-1);
+        float ballpedestal = 0.0007f * Mathf.Pow(DistanceBallPedestal() - 7.0f, 3) * (-1);
+
         AddReward(ballpedestal);
+        float touchProduct = product.inhand * 0.02f;
+        AddReward(touchProduct);
+
         if (doDebug)
         {
-            Debug.Log("distance: " + ballDist + " | altitude: " + ballAlt + " | ball_pedestal: " + ballpedestal);
+            Debug.Log("distance: " + ballDist + " | altitude: " + ballAlt + " | ball_pedestal: " + ballpedestal + " | touching: " + touchProduct + " | total" + (ballDist + ballAlt + ballpedestal + touchProduct));
         }
         if (product.stay > 50)
         {
             level = 3;
-            AddReward(10f);
+            AddReward(20f);
         }
 
     }
     private void LevelThreeCheck()
     { // рука должна положить шар на другой пьедестал
-        float ballpedestal = 0.002f * Mathf.Pow(DistanceBallPedestal() - 2.0f, 3) * (-1);
+        float ballpedestal = 0.004f * Mathf.Pow(DistanceBallPedestal() - 4.0f, 3) * (-1);
         AddReward(ballpedestal);
         float defaultPosD = -0.0001f * differenceToDefault();
         AddReward(defaultPosD);
+        float clawFar = product.inhand * -1 * 0.01f *  ClawOpenTooFarFromBall();
+        AddReward(clawFar);
+        float ballInPedestal = product.pedestal * 0.1f;
+        AddReward(ballInPedestal);
         if (doDebug)
         {
-            Debug.Log("ball_pedestal: " + ballpedestal + " | posD " + defaultPosD);
+            Debug.Log("ball_pedestal: " + ballpedestal + " | posD " + defaultPosD + " | clawFar: " + clawFar + " | pedestal: " + ballInPedestal + " | total" + (ballpedestal + defaultPosD + clawFar + ballInPedestal));
         }
     }
 
@@ -183,6 +195,10 @@ public override void OnEpisodeBegin()
         return Vector3.Distance(sniffer.position, product.transform.position);
     }
     public float DistanceBallPedestal()
+    {
+        return Vector3.Distance( pedestal.targetPoint.position, product.transform.position);
+    }
+    public float DistanceSnifferPedestal()
     {
         return Vector3.Distance(pedestal.targetPoint.position, sniffer.position);
     }
@@ -205,8 +221,7 @@ public override void OnEpisodeBegin()
 
     public float ClawOpenTooFarFromBall()
     {
-        float closeness = (DistanceSnifferBall() - 1.8f)  * -1 ;
-        float ret = palmController.fingers[0].Vrotation.x * closeness;
+        float ret = palmController.fingers[0].Vrotation.x ;
 
         return ret;
     }

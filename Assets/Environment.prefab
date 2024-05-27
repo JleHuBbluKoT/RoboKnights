@@ -981,6 +981,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hand: {fileID: 4025702762963658667}
   stay: 0
+  pedestal: 0
+  inhand: 0
 --- !u!1 &4025702762787572879
 GameObject:
   m_ObjectHideFlags: 0
