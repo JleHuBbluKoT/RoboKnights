@@ -31,7 +31,7 @@ behaviors:
         learning_rate: 0.0003
         use_actions: false
         use_vail: false
-        demo_path: Demo\RoboHandDemoS243.demo
+        demo_path: Demo\RoboHandDemoS900.demo
     max_steps: 1000000
     time_horizon: 64
     summary_freq: 100000

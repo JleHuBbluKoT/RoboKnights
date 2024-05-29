@@ -21,6 +21,14 @@ public class ProductLogic : MonoBehaviour
         
 
     }
+
+    private void FixedUpdate()
+    {
+        if (pedestal  == 1)
+        {
+            stay += 1;
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Finishing" & stay == 0)
@@ -30,7 +38,7 @@ public class ProductLogic : MonoBehaviour
         if (other == hand.pedestal.sc)
         {
             pedestal = 1;
-            stay += 1;
+
         }
     }
     private void OnTriggerExit(Collider other)

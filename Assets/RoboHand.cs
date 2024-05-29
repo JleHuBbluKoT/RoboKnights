@@ -4,6 +4,8 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
+using Unity.MLAgents.Policies;
+
 public class RoboHand : Agent
 {
     public DriveAttempt shoulder;
@@ -23,14 +25,33 @@ public class RoboHand : Agent
     public float strength;  // Важно видеть
     public GameObject handItself;
     public bool doDebug; // Важно видеть
+    public bool smallDebug;
 
+    public float levelMultiplier;
     public Vector2 L1clawLimits;
     public Vector2 ballPowerDist;
     public float ballTouchReward;
     public Vector2 pedestalPowerDist;
 
+    public BehaviorParameters BhParam;
+
     public override void OnEpisodeBegin()
     {
+        if (smallDebug)
+        {
+            if (level == 1)
+            {
+                Debug.Log("Level 1 quit");
+            }
+            if (level ==2 )
+            {
+                Debug.Log("Level 2 quit");
+            }
+            if (level == 3)
+            {
+                Debug.Log("Level 3 quit");
+            }
+        }
         stageSet.ResetStage(this, 0);
         shoulder.SetRotation(Vector3.zero);
         arm.SetRotation(Vector3.zero);
@@ -127,23 +148,41 @@ public class RoboHand : Agent
         {
             IAmAFailure();
         }
+
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            Debug.Log("registered");
+            if (BhParam.BehaviorType == BehaviorType.Default)
+            {
+                Debug.Log("was default, swithced to heuristic");
+                BhParam.BehaviorType = BehaviorType.HeuristicOnly;
+            }
+            else
+            {
+                Debug.Log(" swithced to default");
+                BhParam.BehaviorType = BehaviorType.Default;
+            }
+        }
     }
 
     private void LevelOneCheck() { // рука должна приблизиться к шару, не опрокинув его
+        float lvlMultiplier = 1 + ((level - 1) * levelMultiplier);
+
         float ballDist = ballPowerDist.x * Mathf.Pow(DistanceSnifferBall() - ballPowerDist.y, 3) * -1;
-        AddReward(ballDist);
-        //Debug.Log(ClawOpenTooFarFromBall());
         float clawFar = product.inhand * ClawOpenTooFarFromBall() * L1clawLimits.x + (product.inhand - 1) * ClawOpenTooFarFromBall() * L1clawLimits.y;
-        AddReward(clawFar);
-        //float baseB = BrokenBase() * -0.1f;
-        //AddReward(baseB);
         float touchProduct = product.inhand * ballTouchReward;
-        AddReward(touchProduct);
-        //float rew = Mathf.Pow(palmController.fingersTouching(), 3) * 0.1f;
-        //AddReward(rew);
+
+        ballDist *= lvlMultiplier; clawFar *= lvlMultiplier; touchProduct *= lvlMultiplier;
+
+        AddReward(ballDist * lvlMultiplier);
+        AddReward(clawFar * lvlMultiplier);
+        AddReward(touchProduct * lvlMultiplier);
         if (doDebug)
         {
-            Debug.Log("distance: " + ballDist + " | clawFar: " + clawFar +  " | touching: " + touchProduct + " | total: " + (ballDist + clawFar  + touchProduct) + " | ballH"  + EnvPos(product.transform).y);
+            Debug.Log("distance: " + ballDist + " | clawFar: " + clawFar +  " | touching: " + touchProduct  + " | total: " + (ballDist + clawFar  + touchProduct) + " | ballH"  + EnvPos(product.transform).y);
         }
         if (EnvPos(product.transform).y > 2.7f)
         {
@@ -154,23 +193,26 @@ public class RoboHand : Agent
         {
             level = 3;
             AddReward(20f);
+            //goToDefault = 1;
         }
 
     }
 
     private void LevelTwoCheck()
     { // рука должна поднять шар как можно выше
+        float lvlMultiplier = 1 + ((level - 1) * levelMultiplier);
+
         float ballDist = ballPowerDist.x * Mathf.Pow(DistanceSnifferBall() - ballPowerDist.y, 3) * (-1);
-        AddReward(ballDist);
-        float ballAlt = (EnvPos(product.transform).y + 1) *0.002f;
-        AddReward(ballAlt);
-
-        // должна приблизиться
-        float ballpedestal = pedestalPowerDist.x * Mathf.Pow(DistanceBallPedestal() - pedestalPowerDist.y, 3) * (-1);
-        AddReward(ballpedestal);
-
+        float ballAlt = (EnvPos(product.transform).y + 2) *0.001f;
+        float ballpedestal = pedestalPowerDist.x * Mathf.Pow(DistanceBallPedestal() - pedestalPowerDist.y, 1) * (-1);
         float touchProduct = product.inhand * ballTouchReward;
-        AddReward(touchProduct);
+
+        ballDist *= lvlMultiplier; ballAlt *= lvlMultiplier; ballpedestal *= lvlMultiplier; touchProduct *= lvlMultiplier;
+
+        AddReward(ballDist );
+        AddReward(ballAlt );
+        AddReward(ballpedestal );
+        AddReward(touchProduct );
 
         if (doDebug)
         {
@@ -180,18 +222,24 @@ public class RoboHand : Agent
         {
             level = 3;
             AddReward(20f);
+            //goToDefault = 1;
         }
 
     }
     private void LevelThreeCheck()
     { // рука должна положить шар на другой пьедестал
-        float ballpedestal = 0.004f * Mathf.Pow(DistanceBallPedestal() - 4.0f, 3) * (-1);
-        AddReward(ballpedestal);
+        float lvlMultiplier = 1 + ((level - 1) * levelMultiplier);
+
+        float ballpedestal = pedestalPowerDist.x * Mathf.Pow(DistanceBallPedestal() - pedestalPowerDist.y, 1) * (-1);
         float defaultPosD = -0.0001f * differenceToDefault();
-        AddReward(defaultPosD);
         float clawFar = product.inhand * -1 * 0.01f *  ClawOpenTooFarFromBall();
+        float ballInPedestal = product.pedestal * (0.7f);
+
+        ballpedestal *= lvlMultiplier; defaultPosD *= lvlMultiplier; clawFar *= lvlMultiplier; ballInPedestal *= lvlMultiplier;
+
+        AddReward(ballpedestal);
+        AddReward(defaultPosD);
         AddReward(clawFar);
-        float ballInPedestal = product.pedestal * 0.1f;
         AddReward(ballInPedestal);
         if (doDebug)
         {
