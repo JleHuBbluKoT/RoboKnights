@@ -1,0 +1,47 @@
+{
+    "RoboHand": {
+        "checkpoints": [
+            {
+                "steps": 499936,
+                "file_path": "results\\fatty30\\RoboHand\\RoboHand-499936.onnx",
+                "reward": 792.2388734817505,
+                "creation_time": 1716966519.1758652,
+                "auxillary_file_paths": [
+                    "results\\fatty30\\RoboHand\\RoboHand-499936.pt"
+                ]
+            },
+            {
+                "steps": 999957,
+                "file_path": "results\\fatty30\\RoboHand\\RoboHand-999957.onnx",
+                "reward": 918.1545719570584,
+                "creation_time": 1716967499.021204,
+                "auxillary_file_paths": [
+                    "results\\fatty30\\RoboHand\\RoboHand-999957.pt"
+                ]
+            },
+            {
+                "steps": 1000001,
+                "file_path": "results\\fatty30\\RoboHand\\RoboHand-1000001.onnx",
+                "reward": 907.8583505630493,
+                "creation_time": 1716967499.3022678,
+                "auxillary_file_paths": [
+                    "results\\fatty30\\RoboHand\\RoboHand-1000001.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1000001,
+            "file_path": "results\\fatty30\\RoboHand.onnx",
+            "reward": 907.8583505630493,
+            "creation_time": 1716967499.3022678,
+            "auxillary_file_paths": [
+                "results\\fatty30\\RoboHand\\RoboHand-1000001.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.3.0+cu118"
+    }
+}

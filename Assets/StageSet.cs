@@ -12,10 +12,18 @@ public class StageSet : MonoBehaviour
     {
         float fi = Random.Range(-Mathf.PI, Mathf.PI);
         float lamdaorsomething = Random.Range(3f, 3.8f);
+
+        if (Random.Range(0f, 1f) < 0.8f)
+        {
+            fi = 3;
+            lamdaorsomething = 3;
+        }
+
         startPedestal.transform.localPosition = new Vector3(Mathf.Cos(fi), 0, Mathf.Sin(fi)) * lamdaorsomething + floor.transform.localPosition + Vector3.up;
         finishPedestal.transform.localPosition = new Vector3(Mathf.Cos(fi + lamdaorsomething), 0, Mathf.Sin(fi + lamdaorsomething)) * lamdaorsomething + floor.transform.localPosition + Vector3.up;
         objective.transform.position = startPedestal.targetPoint.position;
         objective.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        //print(lamdaorsomething + " " + fi);
 
     }
 }

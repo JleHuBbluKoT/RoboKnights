@@ -94,7 +94,7 @@ public class RoboHand : Agent
         sensor.AddObservation(palm.CurrentRotation()); // две оси, вверх/вниз и вращение
         sensor.AddObservation(palmController.fingers[0].CurrentRotation()); // одна ось, вращение у всех одинаковое, не важно чье считывать
 
-
+        //Debug.LogFormat("snifferPos: {0} | product: {1} | pedestal: {2} | snifferBall: {3} | BallPedestal: {4}", EnvPos(sniffer), EnvPos(product.transform), EnvPos(pedestal.targetPoint), DistanceSnifferBall(), DistanceBallPedestal());
         
 
         
@@ -206,6 +206,7 @@ public class RoboHand : Agent
         float ballAlt = (EnvPos(product.transform).y + 2) *0.001f;
         float ballpedestal = pedestalPowerDist.x * Mathf.Pow(DistanceBallPedestal() - pedestalPowerDist.y, 1) * (-1);
         float touchProduct = product.inhand * ballTouchReward;
+        float clawFar = product.inhand * ClawOpenTooFarFromBall() * L1clawLimits.x + (product.inhand - 1) * ClawOpenTooFarFromBall() * L1clawLimits.y;
 
         ballDist *= lvlMultiplier; ballAlt *= lvlMultiplier; ballpedestal *= lvlMultiplier; touchProduct *= lvlMultiplier;
 
@@ -213,10 +214,12 @@ public class RoboHand : Agent
         AddReward(ballAlt );
         AddReward(ballpedestal );
         AddReward(touchProduct );
+        AddReward(clawFar);
+
 
         if (doDebug)
         {
-            Debug.Log("distance: " + ballDist + " | altitude: " + ballAlt + " | ball_pedestal: " + ballpedestal + " | touching: " + touchProduct + " | total" + (ballDist + ballAlt + ballpedestal + touchProduct));
+            Debug.Log("distance: " + ballDist + " | altitude: " + ballAlt + " | ball_pedestal: " + ballpedestal + " | touching: " + touchProduct + " | claw: "  +clawFar  + " | total" + (ballDist + ballAlt + ballpedestal + touchProduct + clawFar));
         }
         if (product.stay > 50)
         {
@@ -232,8 +235,8 @@ public class RoboHand : Agent
 
         float ballpedestal = pedestalPowerDist.x * Mathf.Pow(DistanceBallPedestal() - pedestalPowerDist.y, 1) * (-1);
         float defaultPosD = -0.0001f * differenceToDefault();
-        float clawFar = product.inhand * -1 * 0.01f *  ClawOpenTooFarFromBall();
-        float ballInPedestal = product.pedestal * (0.7f);
+        float clawFar = product.inhand * -1 * 0.04f *  ClawOpenTooFarFromBall();
+        float ballInPedestal = product.pedestal * (0.7f + 0.7f);
 
         ballpedestal *= lvlMultiplier; defaultPosD *= lvlMultiplier; clawFar *= lvlMultiplier; ballInPedestal *= lvlMultiplier;
 

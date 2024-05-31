@@ -22,7 +22,7 @@ behaviors:
         strength: 1.0
       gail:
         gamma: 0.99
-        strength: 0.001
+        strength: 0.01
         network_settings:
           normalize: false
           hidden_units: 128
@@ -31,7 +31,7 @@ behaviors:
         learning_rate: 0.0003
         use_actions: false
         use_vail: false
-        demo_path: Demo\RoboHandDemoS900.demo
+        demo_path: Demo\RoboHandDemoFixTry.demo
     max_steps: 1000000
     time_horizon: 64
     summary_freq: 100000

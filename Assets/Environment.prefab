@@ -1305,9 +1305,9 @@ MonoBehaviour:
   doDebug: 0
   smallDebug: 1
   levelMultiplier: 0.2
-  L1clawLimits: {x: 0.002, y: 0.001}
-  ballPowerDist: {x: 0.002, y: 2.1}
-  ballTouchReward: 0.09
+  L1clawLimits: {x: 0.001, y: 0.001}
+  ballPowerDist: {x: 0.001, y: 2.1}
+  ballTouchReward: 0.05
   pedestalPowerDist: {x: 0.04, y: 8}
   BhParam: {fileID: 4025702762963658656}
 --- !u!114 &4025702762963658656

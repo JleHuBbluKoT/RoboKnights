@@ -1,0 +1,29 @@
+{
+    "RoboHand": {
+        "checkpoints": [
+            {
+                "steps": 435316,
+                "file_path": "results\\fatty40\\RoboHand\\RoboHand-435316.onnx",
+                "reward": 1116.7996343813445,
+                "creation_time": 1716987690.4092247,
+                "auxillary_file_paths": [
+                    "results\\fatty40\\RoboHand\\RoboHand-435316.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 435316,
+            "file_path": "results\\fatty40\\RoboHand.onnx",
+            "reward": 1116.7996343813445,
+            "creation_time": 1716987690.4092247,
+            "auxillary_file_paths": [
+                "results\\fatty40\\RoboHand\\RoboHand-435316.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "2.3.0+cu118"
+    }
+}
