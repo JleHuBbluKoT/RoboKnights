@@ -31,20 +31,12 @@ public class DriveAttempt : MonoBehaviour
 
     void Start() {
         anchorToParent = this.transform.localPosition + anchor;
-
-
     }
     // Эта штука плохо работает с объектами, части вращающейся руки проваливаются сквозь пол
     // Update is called once per frame
     void FixedUpdate() {
-        //Vrotation.x =  (Vrotation.x + 0.2f) % 360;
-        //Debug.DrawLine(parent.position, worldAnchor(), Color.green, 0.1f);
-        moveDrive(debugDrive);
-
-        //mainRB.AddForceAtPosition(weight * Vector3.down, this.transform.position);
+        //moveDrive(debugDrive);
     }
-
-
     public void SetRotation()
     {
         Vrotation = rotationClamp(Vrotation);
@@ -59,14 +51,6 @@ public class DriveAttempt : MonoBehaviour
         this.transform.localRotation = rotation;
         this.transform.localPosition = anchorToParent + rotation * -anchor;
     }
-    /*
-    public void moveDrive(Vector3 change) {
-        //Quaternion prevRot = Quaternion.Euler(Vrotation);
-        Vrotation = rotationClamp(Vrotation + change);
-        Quaternion newRot = Quaternion.Euler(Vrotation);
-        Vector3 newPos = anchorToParent + newRot * inverseAnchor;
-        this.transform.Translate(newPos - this.transform.position, this.transform);
-    }*/
     public void moveDrive(Vector3 change)
     {
         Vrotation += change;
@@ -113,5 +97,14 @@ public class DriveAttempt : MonoBehaviour
         float half = (limits.y - limits.x) / 2;
         return (current - half) / half + 1;
     }
+    /*
+public void moveDrive(Vector3 change) {
+    //Quaternion prevRot = Quaternion.Euler(Vrotation);
+    Vrotation = rotationClamp(Vrotation + change);
+    Quaternion newRot = Quaternion.Euler(Vrotation);
+    Vector3 newPos = anchorToParent + newRot * inverseAnchor;
+    this.transform.Translate(newPos - this.transform.position, this.transform);
+}*/
+
 
 }

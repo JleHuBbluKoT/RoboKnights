@@ -34,12 +34,16 @@ public class RoboHand : Agent
     public Vector2 pedestalPowerDist;
 
     public BehaviorParameters BhParam;
+    public int episodeCount = -1;
 
     public override void OnEpisodeBegin()
     {
+        episodeCount += 1;
+        if (episodeCount == 10) this.enabled = false;
+
         if (smallDebug)
         {
-            if (level == 1)
+            if (level == 1 )
             {
                 Debug.Log("Level 1 quit");
             }
@@ -49,7 +53,11 @@ public class RoboHand : Agent
             }
             if (level == 3)
             {
-                Debug.Log("Level 3 quit");
+                Debug.Log("Level 3 quit");               
+            }
+            if (level == 4)
+            {
+                Debug.Log("Level 4 quit");
             }
         }
         stageSet.ResetStage(this, 0);
@@ -136,6 +144,9 @@ public class RoboHand : Agent
             case 3:
                 LevelThreeCheck();
                 break;
+            case 4:
+                LevelFourCheck();
+                break;
             default:
                 break;
         }
@@ -148,8 +159,8 @@ public class RoboHand : Agent
         {
             IAmAFailure();
         }
-
     }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.V))
@@ -203,11 +214,12 @@ public class RoboHand : Agent
         float lvlMultiplier = 1 + ((level - 1) * levelMultiplier);
 
         float ballDist = ballPowerDist.x * Mathf.Pow(DistanceSnifferBall() - ballPowerDist.y, 3) * (-1);
-        float ballAlt = (EnvPos(product.transform).y + 2) *0.001f;
+        float ballAlt = (EnvPos(product.transform).y + 2) *0.003f;
         float ballpedestal = pedestalPowerDist.x * Mathf.Pow(DistanceBallPedestal() - pedestalPowerDist.y, 1) * (-1);
         float touchProduct = product.inhand * ballTouchReward;
-        float clawFar = product.inhand * ClawOpenTooFarFromBall() * L1clawLimits.x + (product.inhand - 1) * ClawOpenTooFarFromBall() * L1clawLimits.y;
+        //float clawFar = product.inhand * ClawOpenTooFarFromBall() * L1clawLimits.x + (product.inhand - 1) * ClawOpenTooFarFromBall() * L1clawLimits.y;
 
+        float clawFar = 0;
         ballDist *= lvlMultiplier; ballAlt *= lvlMultiplier; ballpedestal *= lvlMultiplier; touchProduct *= lvlMultiplier;
 
         AddReward(ballDist );
@@ -234,9 +246,9 @@ public class RoboHand : Agent
         float lvlMultiplier = 1 + ((level - 1) * levelMultiplier);
 
         float ballpedestal = pedestalPowerDist.x * Mathf.Pow(DistanceBallPedestal() - pedestalPowerDist.y, 1) * (-1);
-        float defaultPosD = -0.0001f * differenceToDefault();
+        float defaultPosD = -0.001f * differenceToDefault();
         float clawFar = product.inhand * -1 * 0.04f *  ClawOpenTooFarFromBall();
-        float ballInPedestal = product.pedestal * (0.7f + 0.7f);
+        float ballInPedestal = product.pedestal * (1f);
 
         ballpedestal *= lvlMultiplier; defaultPosD *= lvlMultiplier; clawFar *= lvlMultiplier; ballInPedestal *= lvlMultiplier;
 
@@ -248,6 +260,28 @@ public class RoboHand : Agent
         {
             Debug.Log("ball_pedestal: " + ballpedestal + " | posD " + defaultPosD + " | clawFar: " + clawFar + " | pedestal: " + ballInPedestal + " | total" + (ballpedestal + defaultPosD + clawFar + ballInPedestal));
         }
+        if (product.stay > 150 & DistanceSnifferBall() > 1f)
+        {
+            level = 4;
+            AddReward(500f);
+        }
+    }
+    private void LevelFourCheck()
+    {
+        float lvlMultiplier = 1 + ((level - 1) * levelMultiplier);
+        float defaultPosD = -0.001f * differenceToDefault();
+        float ballInPedestal = product.pedestal * (0.3f);
+        defaultPosD *= lvlMultiplier; ballInPedestal *= lvlMultiplier;
+
+
+        AddReward(defaultPosD);
+
+        AddReward(ballInPedestal);
+        if (doDebug)
+        {
+            Debug.Log(" | posD " + defaultPosD + " | pedestal: " + ballInPedestal + " | total" + (defaultPosD + ballInPedestal));
+        }
+
     }
 
     public Vector3 EnvPos(Transform other)

@@ -20,6 +20,7 @@ public class AgentController : Agent
         float lamdaorsomething = Random.Range(3f, 7f);
 
         target.localPosition = new Vector3(Mathf.Cos(fi), 0, Mathf.Sin(fi)) * lamdaorsomething + startPos;
+        
     }
     public override void OnActionReceived(ActionBuffers actions) {
         float moveX = actions.ContinuousActions[0];
