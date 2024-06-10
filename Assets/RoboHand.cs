@@ -36,10 +36,12 @@ public class RoboHand : Agent
     public BehaviorParameters BhParam;
     public int episodeCount = -1;
 
+    public bool AllowHeuristic;
+
     public override void OnEpisodeBegin()
     {
         episodeCount += 1;
-        if (episodeCount == 10) this.enabled = false;
+        //if (episodeCount == 10) this.enabled = false;
 
         if (smallDebug)
         {
@@ -111,23 +113,25 @@ public class RoboHand : Agent
     public override void Heuristic(in ActionBuffers actionsOut)
         {
         ActionSegment<float> ContiniousAction = actionsOut.ContinuousActions;
-        ContiniousAction[0] = Input.GetAxisRaw("Vertical");
-        ContiniousAction[1] = Input.GetAxisRaw("Horizontal");
-        if (Input.GetKey(KeyCode.R)) ContiniousAction[2] = 1;
-        else if (Input.GetKey(KeyCode.F)) ContiniousAction[2] = -1;
-        else ContiniousAction[2] = 0;
+        if (AllowHeuristic)
+        {
+            ContiniousAction[0] = Input.GetAxisRaw("Vertical");
+            ContiniousAction[1] = Input.GetAxisRaw("Horizontal");
+            if (Input.GetKey(KeyCode.R)) ContiniousAction[2] = 1;
+            else if (Input.GetKey(KeyCode.F)) ContiniousAction[2] = -1;
+            else ContiniousAction[2] = 0;
 
-        if (Input.GetKey(KeyCode.Y)) ContiniousAction[3] = 1;
-        else if (Input.GetKey(KeyCode.H)) ContiniousAction[3] = -1;
-        else ContiniousAction[3] = 0;
-        if (Input.GetKey(KeyCode.G)) ContiniousAction[4] = 1;
-        else if (Input.GetKey(KeyCode.J)) ContiniousAction[4] = -1;
-        else ContiniousAction[4] = 0;
+            if (Input.GetKey(KeyCode.Y)) ContiniousAction[3] = 1;
+            else if (Input.GetKey(KeyCode.H)) ContiniousAction[3] = -1;
+            else ContiniousAction[3] = 0;
+            if (Input.GetKey(KeyCode.G)) ContiniousAction[4] = 1;
+            else if (Input.GetKey(KeyCode.J)) ContiniousAction[4] = -1;
+            else ContiniousAction[4] = 0;
 
-        if (Input.GetKey(KeyCode.I)) ContiniousAction[5] = 1;
-        else if (Input.GetKey(KeyCode.K)) ContiniousAction[5] = -1;
-        else ContiniousAction[5] = 0;
-        //Debug.Log("i am on tv");
+            if (Input.GetKey(KeyCode.I)) ContiniousAction[5] = 1;
+            else if (Input.GetKey(KeyCode.K)) ContiniousAction[5] = -1;
+            else ContiniousAction[5] = 0;
+        }
     }
 
 
